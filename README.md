@@ -14,17 +14,17 @@
 
 ## 📸 Vistas Reales del Sistema
 
-### 1. Panel de Detalle del Lead & Pipeline de Ventas
-
-![LeadFlow CRM Dashboard con Drawer](./docs/screenshots/dashboard-preview.png)
-
-### 2. Tablero Kanban Interactivo
+### 1. Tablero Kanban Interactivo de Ventas
 
 ![LeadFlow CRM Tablero Kanban](./docs/screenshots/kanban-preview.png)
 
-### 3. Directorio de Leads & Filtros Avanzados
+### 2. Directorio de Leads & Filtros Avanzados
 
 ![LeadFlow CRM Directorio de Leads](./docs/screenshots/leads-table-preview.png)
+
+### 3. Panel Lateral de Detalle del Lead & Actividades
+
+![LeadFlow CRM Panel de Detalle](./docs/screenshots/lead-drawer-preview.png)
 
 ---
 
