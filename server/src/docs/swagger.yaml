@@ -1,0 +1,611 @@
+openapi: 3.0.3
+info:
+  title: LeadFlow CRM API
+  description: API REST para CRM de Leads B2B y Pipeline Comercial con Express 5, TypeScript y MySQL 8.4 LTS.
+  version: 1.0.0
+  contact:
+    name: LeadFlow Engineering
+    email: dev@leadflow.io
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Servidor de Desarrollo Local
+paths:
+  # Auth Endpoints
+  /auth/register:
+    post:
+      tags:
+        - Autenticación
+      summary: Registrar nuevo comercial o administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterInput'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente con token JWT
+        '400':
+          description: Error de validación de campos
+        '409':
+          description: El correo ya se encuentra registrado
+
+  /auth/login:
+    post:
+      tags:
+        - Autenticación
+      summary: Iniciar sesión y obtener token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '200':
+          description: Sesión iniciada con éxito
+        '401':
+          description: Credenciales incorrectas
+
+  /auth/me:
+    get:
+      tags:
+        - Autenticación
+      summary: Obtener perfil del usuario autenticado
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Datos del usuario autenticado
+        '401':
+          description: No autorizado o token expirado
+
+  # Stages Endpoints
+  /stages:
+    get:
+      tags:
+        - Etapas de Pipeline
+      summary: Listar todas las etapas del pipeline comercial
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de etapas ordenadas con conteos de prospectos
+    post:
+      tags:
+        - Etapas de Pipeline
+      summary: Crear nueva etapa de pipeline
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStageInput'
+      responses:
+        '201':
+          description: Etapa creada exitosamente
+
+  /stages/reorder:
+    post:
+      tags:
+        - Etapas de Pipeline
+      summary: Reordenar etapas del pipeline de forma transaccional
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReorderStagesInput'
+      responses:
+        '200':
+          description: Orden actualizado exitosamente
+
+  /stages/{id}:
+    get:
+      tags:
+        - Etapas de Pipeline
+      summary: Obtener etapa por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalle de etapa
+        '404':
+          description: Etapa no encontrada
+    put:
+      tags:
+        - Etapas de Pipeline
+      summary: Actualizar etapa existente
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStageInput'
+      responses:
+        '200':
+          description: Etapa actualizada
+    delete:
+      tags:
+        - Etapas de Pipeline
+      summary: Eliminar etapa (si no contiene leads)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Etapa eliminada
+        '400':
+          description: La etapa tiene leads asociados
+
+  # Leads Endpoints
+  /leads:
+    get:
+      tags:
+        - Prospectos Comerciales (Leads)
+      summary: Listar leads con filtros, búsqueda y paginación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: stage_id
+          in: query
+          schema:
+            type: integer
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high]
+      responses:
+        '200':
+          description: Listado paginado de prospectos
+    post:
+      tags:
+        - Prospectos Comerciales (Leads)
+      summary: Crear nuevo prospecto comercial
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLeadInput'
+      responses:
+        '201':
+          description: Prospecto creado exitosamente
+
+  /leads/{id}:
+    get:
+      tags:
+        - Prospectos Comerciales (Leads)
+      summary: Obtener lead por ID con historial de actividades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalle completo del lead
+        '404':
+          description: Prospecto no encontrado
+    put:
+      tags:
+        - Prospectos Comerciales (Leads)
+      summary: Actualizar datos de un prospecto
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLeadInput'
+      responses:
+        '200':
+          description: Prospecto actualizado
+    delete:
+      tags:
+        - Prospectos Comerciales (Leads)
+      summary: Eliminar prospecto
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Prospecto eliminado
+
+  /leads/{id}/stage:
+    patch:
+      tags:
+        - Prospectos Comerciales (Leads)
+      summary: Cambiar etapa de un prospecto (Kanban drag-and-drop)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - stage_id
+              properties:
+                stage_id:
+                  type: integer
+      responses:
+        '200':
+          description: Etapa actualizada
+
+  # Activities Endpoints
+  /activities:
+    get:
+      tags:
+        - Actividades Comerciales
+      summary: Listar actividades con filtros
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: lead_id
+          in: query
+          schema:
+            type: integer
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [call, meeting, email, note]
+      responses:
+        '200':
+          description: Listado de actividades
+    post:
+      tags:
+        - Actividades Comerciales
+      summary: Registrar nueva actividad
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateActivityInput'
+      responses:
+        '201':
+          description: Actividad registrada
+
+  /activities/{id}:
+    put:
+      tags:
+        - Actividades Comerciales
+      summary: Actualizar actividad
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateActivityInput'
+      responses:
+        '200':
+          description: Actividad actualizada
+    delete:
+      tags:
+        - Actividades Comerciales
+      summary: Eliminar actividad
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Actividad eliminada
+
+  # Metrics Endpoints
+  /metrics/overview:
+    get:
+      tags:
+        - Métricas y Analytics
+      summary: Obtener KPIs comerciales generales
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: KPIs de conversión y volumen
+
+  /metrics/pipeline:
+    get:
+      tags:
+        - Métricas y Analytics
+      summary: Obtener distribución de volumen por etapas
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Volumen y conteos por etapa
+
+  /metrics/sources:
+    get:
+      tags:
+        - Métricas y Analytics
+      summary: Obtener rendimiento por canal de captación
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Rendimiento y conversiones por canal
+
+  /metrics/reps:
+    get:
+      tags:
+        - Métricas y Analytics
+      summary: Obtener métricas de productividad por comercial
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Productividad de equipo comercial
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    RegisterInput:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: Carlos Gómez
+        email:
+          type: string
+          example: carlos.gomez@leadflow.io
+        password:
+          type: string
+          example: Password123!
+        role:
+          type: string
+          enum: [admin, sales]
+          default: sales
+
+    LoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: carlos.gomez@leadflow.io
+        password:
+          type: string
+          example: Password123!
+
+    CreateStageInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Negociación Final
+        color:
+          type: string
+          example: '#6366f1'
+        order_index:
+          type: integer
+          example: 5
+        is_won:
+          type: boolean
+          default: false
+        is_lost:
+          type: boolean
+          default: false
+
+    UpdateStageInput:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+        is_won:
+          type: boolean
+        is_lost:
+          type: boolean
+
+    ReorderStagesInput:
+      type: object
+      required:
+        - stages
+      properties:
+        stages:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - order_index
+            properties:
+              id:
+                type: integer
+              order_index:
+                type: integer
+
+    CreateLeadInput:
+      type: object
+      required:
+        - company_name
+        - contact_name
+        - email
+        - stage_id
+      properties:
+        company_name:
+          type: string
+          example: InnovaTech Solutions S.L.
+        contact_name:
+          type: string
+          example: Sofía Balaguer
+        email:
+          type: string
+          example: sofia.b@innovatech.es
+        phone:
+          type: string
+          example: +34 932 112 344
+        stage_id:
+          type: integer
+          example: 1
+        source_id:
+          type: integer
+          example: 1
+        value_amount:
+          type: number
+          example: 18500
+        priority:
+          type: string
+          enum: [low, medium, high]
+          default: medium
+        notes:
+          type: string
+          example: Interesados en migración de CRM.
+
+    UpdateLeadInput:
+      type: object
+      properties:
+        company_name:
+          type: string
+        contact_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        stage_id:
+          type: integer
+        source_id:
+          type: integer
+        user_id:
+          type: integer
+        value_amount:
+          type: number
+        priority:
+          type: string
+          enum: [low, medium, high]
+        notes:
+          type: string
+
+    CreateActivityInput:
+      type: object
+      required:
+        - lead_id
+        - type
+        - summary
+      properties:
+        lead_id:
+          type: integer
+          example: 1
+        type:
+          type: string
+          enum: [call, meeting, email, note]
+          example: call
+        summary:
+          type: string
+          example: Llamada de presentación de producto
+        scheduled_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    UpdateActivityInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [call, meeting, email, note]
+        summary:
+          type: string
+        scheduled_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        is_completed:
+          type: boolean

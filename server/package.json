@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && node -e \"import('fs').then(fs => { fs.mkdirSync('dist/docs', {recursive: true}); fs.copyFileSync('src/docs/swagger.yaml', 'dist/docs/swagger.yaml'); })\"",
     "start": "node dist/server.js",
     "seed": "tsx src/scripts/seed.ts",
     "test": "vitest run"
