@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes.js';
 import stageRoutes from './routes/stage.routes.js';
 import leadRoutes from './routes/lead.routes.js';
 import activityRoutes from './routes/activity.routes.js';
+import metricsRoutes from './routes/metrics.routes.js';
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/stages', stageRoutes);
 app.use('/api/v1/leads', leadRoutes);
 app.use('/api/v1/activities', activityRoutes);
+app.use('/api/v1/metrics', metricsRoutes);
 
 // API Root info
 app.get('/api/v1', (_req: Request, res: Response) => {
