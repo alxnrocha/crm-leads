@@ -68,7 +68,6 @@
 │   ├── README.md                  # Diagrama DER (Mermaid) y diccionario de datos
 │   ├── schema.sql                 # DDL de creación de tablas e índices
 │   └── seed.sql                   # Datos de demostración en SQL
-├── docs/screenshots/              # Capturas y previsualizaciones del sistema
 ├── server/                        # Backend (Node.js 22 + Express 5 + Sequelize)
 │   ├── src/
 │   │   ├── __tests__/             # Pruebas de integración con Supertest

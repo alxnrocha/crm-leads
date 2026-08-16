@@ -35,6 +35,7 @@ design/
 # Coverage and test outputs
 coverage
 .nyc_output
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
