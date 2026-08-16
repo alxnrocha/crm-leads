@@ -12,9 +12,19 @@
 
 ---
 
-## 📸 Vista Previa del Sistema
+## 📸 Vistas Reales del Sistema
 
-![LeadFlow CRM Dashboard Preview](./docs/screenshots/dashboard-preview.png)
+### 1. Panel de Detalle del Lead & Pipeline de Ventas
+
+![LeadFlow CRM Dashboard con Drawer](./docs/screenshots/dashboard-preview.png)
+
+### 2. Tablero Kanban Interactivo
+
+![LeadFlow CRM Tablero Kanban](./docs/screenshots/kanban-preview.png)
+
+### 3. Directorio de Leads & Filtros Avanzados
+
+![LeadFlow CRM Directorio de Leads](./docs/screenshots/leads-table-preview.png)
 
 ---
 
