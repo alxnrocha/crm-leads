@@ -4,6 +4,7 @@
   --font-sans:
     'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
+  /* Brand Primary (Indigo/Violet CRM Theme) */
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;
   --color-brand-200: #c7d2fe;
@@ -14,13 +15,98 @@
   --color-brand-700: #4338ca;
   --color-brand-800: #3730a3;
   --color-brand-900: #312e81;
+  --color-brand-950: #1e1b4b;
 
-  --color-surface: #ffffff;
-  --color-surface-muted: #f8fafc;
+  /* Pipeline Stage Accents */
+  --color-stage-new: #0ea5e9;
+  --color-stage-new-soft: #f0f9ff;
+  --color-stage-contacted: #f59e0b;
+  --color-stage-contacted-soft: #fffbeb;
+  --color-stage-qualified: #8b5cf6;
+  --color-stage-qualified-soft: #f5f3ff;
+  --color-stage-proposal: #6366f1;
+  --color-stage-proposal-soft: #eef2ff;
+  --color-stage-won: #10b981;
+  --color-stage-won-soft: #ecfdf5;
+  --color-stage-lost: #f43f5e;
+  --color-stage-lost-soft: #fff1f2;
+
+  /* Priority Tokens */
+  --color-priority-low: #64748b;
+  --color-priority-medium: #f59e0b;
+  --color-priority-high: #ef4444;
+
+  /* Surface & Container Tokens */
+  --color-surface-bg: #f8fafc;
   --color-surface-card: #ffffff;
   --color-surface-border: #e2e8f0;
+  --color-surface-muted: #f1f5f9;
+  --color-surface-sidebar: #0f172a;
+
+  /* Animations */
+  --animate-fade-in: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-down: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 :root {
   font-family: var(--font-sans);
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-surface-bg: #020617;
+  --color-surface-card: #0f172a;
+  --color-surface-border: #1e293b;
+  --color-surface-muted: #1e293b;
+  --color-surface-sidebar: #020617;
+}
+
+/* Custom scrollbars for CRM Kanban and Tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

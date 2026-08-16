@@ -36,7 +36,7 @@ Plataforma full-stack de gestión comercial, prospección de clientes y seguimie
 ### 1. Clonar el repositorio e instalar dependencias
 
 ```bash
-git clone https://github.com/alxnrocha/11-crm-leads.git
+git clone https://github.com/alxnrocha/crm-leads.git
 cd 11-crm-leads
 npm install
 ```
