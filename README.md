@@ -82,8 +82,6 @@
 │   │   ├── scripts/seed.ts        # Script de población de datos ORM
 │   │   └── server.ts              # Servidor Express y montaje de Swagger
 │   └── tsconfig.json
-├── BLUEPRINT.md                   # Hoja de ruta y 18 issues completadas
-├── DECISIONS.md                   # Registro de decisiones de ingeniería
 └── package.json                   # Monorepo Workspaces y scripts globales
 ```
 
@@ -169,4 +167,3 @@ npm run build
 Este proyecto está bajo la Licencia MIT. Consulte el archivo [LICENSE](./LICENSE) para más detalles.
 
 **Autor:** [Alexandre Rocha](https://github.com/alxnrocha)
-
