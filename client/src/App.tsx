@@ -7,6 +7,7 @@ import { DashboardLayout } from './components/layout/DashboardLayout.js';
 import { NavItemKey } from './components/layout/Sidebar.js';
 import { MetricCards, OverviewMetricsData } from './components/dashboard/MetricCards.js';
 import { KanbanBoard } from './components/pipeline/KanbanBoard.js';
+import { LeadsView } from './views/LeadsView.js';
 import {
   Card,
   CardHeader,
@@ -148,16 +149,10 @@ function AuthenticatedApp() {
         {activeNav === 'pipeline' && <KanbanBoard searchFilter={searchQuery} />}
 
         {activeNav === 'leads' && (
-          <Card className="bg-[#121824] border-slate-800 p-8 text-center space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto">
-              <Users className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold text-white">Directorio de Prospectos</h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto">
-              En la Issue #15 implementaremos la tabla densa de datos de leads con búsqueda, filtros
-              por etapa, paginación y modal de creación/edición.
-            </p>
-          </Card>
+          <LeadsView
+            onSelectLead={(lead) => console.log('Lead selected:', lead)}
+            externalSearch={searchQuery}
+          />
         )}
 
         {activeNav === 'activities' && (
