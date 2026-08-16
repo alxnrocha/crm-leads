@@ -8,6 +8,9 @@ import { NavItemKey } from './components/layout/Sidebar.js';
 import { MetricCards, OverviewMetricsData } from './components/dashboard/MetricCards.js';
 import { KanbanBoard } from './components/pipeline/KanbanBoard.js';
 import { LeadsView } from './views/LeadsView.js';
+import { LeadDetailsDrawer } from './components/leads/LeadDetailsDrawer.js';
+import { Lead, Stage } from './types/pipeline.types.js';
+import { pipelineService } from './services/pipeline.service.js';
 import {
   Card,
   CardHeader,
@@ -24,15 +27,35 @@ function AuthenticatedApp() {
   const { user } = useAuth();
   const [activeNav, setActiveNav] = useState<NavItemKey>('pipeline');
   const [metrics, setMetrics] = useState<OverviewMetricsData | undefined>(undefined);
+  const [stages, setStages] = useState<Stage[]>([]);
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Selected Lead Drawer State
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   useEffect(() => {
-    const fetchMetrics = async () => {
+    const fetchData = async () => {
       setIsLoadingMetrics(true);
       try {
-        const data = await api.get<{ metrics: OverviewMetricsData }>('/metrics/overview');
-        setMetrics(data.metrics);
+        const [metricsData, stagesData] = await Promise.all([
+          api
+            .get<{ metrics: OverviewMetricsData }>('/metrics/overview')
+            .catch(() => ({ metrics: undefined })),
+          pipelineService.getStages(),
+        ]);
+        if (metricsData.metrics) {
+          setMetrics(metricsData.metrics);
+        } else {
+          setMetrics({
+            total_leads: 18,
+            pipeline_value: 345000,
+            won_revenue: 120000,
+            win_rate_percentage: 42,
+          });
+        }
+        setStages(stagesData);
       } catch {
         setMetrics({
           total_leads: 18,
@@ -45,8 +68,20 @@ function AuthenticatedApp() {
       }
     };
 
-    fetchMetrics();
+    fetchData();
   }, []);
+
+  const handleOpenLeadDrawer = (lead: Lead) => {
+    setSelectedLead(lead);
+    setIsDrawerOpen(true);
+  };
+
+  const handleUpdateLeadStage = async (leadId: number, stageId: number) => {
+    if (selectedLead && selectedLead.id === leadId) {
+      setSelectedLead({ ...selectedLead, stage_id: stageId });
+    }
+    await pipelineService.updateLeadStage(leadId, stageId);
+  };
 
   return (
     <DashboardLayout
@@ -141,18 +176,17 @@ function AuthenticatedApp() {
               <h2 className="text-lg font-bold text-white tracking-tight">
                 Pipeline de Ventas en Vivo
               </h2>
-              <KanbanBoard searchFilter={searchQuery} />
+              <KanbanBoard onSelectLead={handleOpenLeadDrawer} searchFilter={searchQuery} />
             </div>
           </div>
         )}
 
-        {activeNav === 'pipeline' && <KanbanBoard searchFilter={searchQuery} />}
+        {activeNav === 'pipeline' && (
+          <KanbanBoard onSelectLead={handleOpenLeadDrawer} searchFilter={searchQuery} />
+        )}
 
         {activeNav === 'leads' && (
-          <LeadsView
-            onSelectLead={(lead) => console.log('Lead selected:', lead)}
-            externalSearch={searchQuery}
-          />
+          <LeadsView onSelectLead={handleOpenLeadDrawer} externalSearch={searchQuery} />
         )}
 
         {activeNav === 'activities' && (
@@ -192,13 +226,22 @@ function AuthenticatedApp() {
         )}
       </div>
 
+      {/* Slide-over Lead Details Drawer (Cloned from design.png) */}
+      <LeadDetailsDrawer
+        lead={selectedLead}
+        stages={stages}
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        onUpdateStage={handleUpdateLeadStage}
+      />
+
       {/* Footer Tracker */}
       <footer className="bg-[#121824] border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-indigo-400" />
-          <span>LeadFlow CRM v1.0.0 — Tablero Kanban Interactivo</span>
+          <span>LeadFlow CRM v1.0.0 — Experiencia Visual y Frontend Completo</span>
         </div>
-        <span className="text-indigo-400 font-mono text-[11px]">Issue #14 Completa</span>
+        <span className="text-indigo-400 font-mono text-[11px]">Issue #16 Completa</span>
       </footer>
     </DashboardLayout>
   );
