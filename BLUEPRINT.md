@@ -1,76 +1,49 @@
-# Blueprint: LeadFlow CRM (Proyecto 11)
+# BLUEPRINT: CRM de Leads B2B y Pipeline Comercial
 
-## 📌 Resumen del Proyecto
+## 1. Visión General y Propósito
 
-Plataforma CRM profesional full-stack diseñada para equipos comerciales y de ventas B2B. Proporciona captura y calificación de prospectos (leads), seguimiento de pipeline visual por etapas (Kanban), registro de actividades comerciales (llamadas, reuniones, correos, notas), cálculo analítico de conversión de ventas y autenticación robusta mediante JWT con base de datos relacional MySQL 8.4 LTS.
-
----
-
-## 🛠️ Stack Tecnológico
-
-### Frontend (`client/`)
-
-- **Core:** React 19.2, TypeScript 5.8+, Vite 8
-- **Estilos:** Tailwind CSS v4 (CSS-first `@theme`), Lucide React
-- **Formularios & Validación:** React Hook Form 7, Zod 4 (`zodResolver`)
-- **Estado Global:** Zustand 5
-- **Métricas & Gráficos:** Recharts 3
-- **Utilidades:** `clsx`, `tailwind-merge`, `date-fns` 4
-
-### Backend (`server/`)
-
-- **Core:** Node.js 22 LTS, Express 5, TypeScript
-- **Base de Datos & ORM:** MySQL 8.4 LTS, Sequelize 6
-- **Autenticación & Seguridad:** JSON Web Tokens (`jsonwebtoken`), `bcryptjs`, `helmet`, `cors`, `express-rate-limit`
-- **Validación de Requests:** Zod 3 / 4
-- **Documentación de API:** OpenAPI 3.0, Swagger UI (`/api/docs`)
-
-### Tooling & Calidad
-
-- **Linters & Formatters:** Oxlint, Prettier, Husky, lint-staged
-- **Testing:** Supertest (API), Vitest + React Testing Library (Client)
-- **CI/CD:** GitHub Actions (`.github/workflows/ci.yml`)
+**LeadFlow CRM** es una solución Full Stack diseñada para equipos comerciales y directores de ventas B2B. Permite gestionar oportunidades comerciales a lo largo de un pipeline visual interactivo (Kanban), consultar un directorio de leads con filtros avanzados y paginación, registrar actividades cronológicas (llamadas, reuniones, notas), inspeccionar métricas clave de conversión y documentar la API bajo el estándar OpenAPI 3.0.
 
 ---
 
-## 🗺️ Roadmap y Milestones (18 Issues)
+## 2. Decisiones Técnicas y Diferenciales
 
-### Milestone 1 — Project Foundation & Architecture
-
-- **#1** `Set up initial project structure, monorepo tooling and core dependencies`
-- **#2** `Configure frontend styling, design tokens and dark/light mode`
-- **#3** `Build reusable UI primitives (Button, Input, Card, Badge, Modal, Select)`
-- **#4** `Design relational database schema and documentation for MySQL 8.4 LTS`
-
-### Milestone 2 — Backend API & Data Layer
-
-- **#5** `Implement database connection, ORM models and seed data script`
-- **#6** `Implement authentication system (JWT, bcrypt, register, login, me endpoint)`
-- **#7** `Implement CRUD endpoints for stages and sales pipeline management`
-- **#8** `Implement CRUD endpoints and search/filters for leads`
-- **#9** `Implement activities and interactions logging endpoints`
-- **#10** `Implement metrics aggregation endpoints for pipeline conversion and sales volume`
-- **#11** `Configure OpenAPI / Swagger documentation for backend endpoints`
-
-### Milestone 3 — Frontend Integration & Core Experience
-
-- **#12** `Implement client authentication state, route guards and login/register views`
-- **#13** `Implement dashboard layout, navigation sidebar and metrics cards`
-- **#14** `Implement interactive Kanban board for visual sales pipeline with stage transitions`
-- **#15** `Implement Leads table view with pagination, filters and create/edit modal (RHF + Zod)`
-- **#16** `Implement Lead details drawer with activity timeline and quick actions`
-
-### Milestone 4 — Quality, Testing & Release
-
-- **#17** `Configure automated tests (Supertest for API & Vitest for client) and CI pipeline`
-- **#18** `Generate project screenshots, complete documentation and prepare production deployment`
+1. **Frontend:** React 19 + TypeScript + Vite 8 + Tailwind CSS v4 (`@theme` tokens y Dark Mode).
+2. **Backend:** Node.js 22 LTS + Express 5 + Sequelize ORM + Zod validation middlewares.
+3. **Base de Datos:** MySQL 8.4 LTS relacional con DDL optimizado, claves foráneas e índices compuestos.
+4. **Documentación:** OpenAPI 3.0.3 con Swagger UI en `/api/docs`.
+5. **Calidad:** Oxlint, Prettier, Husky, Supertest, Vitest y GitHub Actions CI.
 
 ---
 
-## 🎨 Dominio y Modelo de Datos
+## 3. Milestones y Desglose de Issues (18/18 Concluidas)
 
-1. **Users (`users`):** Representantes comerciales y administradores del CRM.
-2. **Stages (`stages`):** Fases del pipeline de ventas (`Nuevo`, `En Contacto`, `Calificado`, `Propuesta`, `Ganado`, `Perdido`).
-3. **Sources (`lead_sources`):** Origen de captación del prospecto (`Website`, `Meta Ads`, `Google Ads`, `Referencia`, `Evento`).
-4. **Leads (`leads`):** Prospecto comercial con valor estimado en euros, contacto, empresa y prioridad (`low`, `medium`, `high`).
-5. **Activities (`activities`):** Historial cronológico de interacciones (`call`, `meeting`, `email`, `note`).
+### 🏗️ Milestone 1 — Project Foundation & Architecture (4/4)
+
+- [x] **Issue #1:** `Initialize Monorepo structure, tooling (Oxlint, Prettier, Husky) and base configs`
+- [x] **Issue #2:** `Configure design system, CSS tokens and dark/light theme switching`
+- [x] **Issue #3:** `Build core accessible UI primitives (Button, Input, Select, Card, Badge, Modal)`
+- [x] **Issue #4:** `Design relational database schema (MySQL 8.4 DDL), indexes and seed data`
+
+### ⚙️ Milestone 2 — Backend API & Data Layer (7/7)
+
+- [x] **Issue #5:** `Set up Sequelize connection pool, typed models and migrations/seeds`
+- [x] **Issue #6:** `Implement JWT authentication, password hashing and auth middleware`
+- [x] **Issue #7:** `Implement Pipeline Stages CRUD endpoints and reordering logic`
+- [x] **Issue #8:** `Implement Leads CRUD, search and filtering endpoints with stage transitions`
+- [x] **Issue #9:** `Implement Activity logging and interaction tracking endpoints`
+- [x] **Issue #10:** `Implement Analytics and metrics aggregation endpoints (pipeline volume, win rate)`
+- [x] **Issue #11:** `Configure OpenAPI 3.0 Swagger documentation and Swagger UI endpoint`
+
+### 🎨 Milestone 3 — Frontend Integration & Core Experience (5/5)
+
+- [x] **Issue #12:** `Implement client authentication state, route guards and login/register views`
+- [x] **Issue #13:** `Implement dashboard layout, navigation sidebar and metrics cards`
+- [x] **Issue #14:** `Implement interactive Kanban board for visual sales pipeline with stage transitions`
+- [x] **Issue #15:** `Implement Leads table view with pagination, filters and create/edit modal (RHF + Zod)`
+- [x] **Issue #16:** `Implement Lead details drawer with activity timeline and quick actions`
+
+### 🚀 Milestone 4 — Quality, Testing & Release (2/2)
+
+- [x] **Issue #17:** `Configure automated tests (Supertest for API & Vitest for client) and CI pipeline`
+- [x] **Issue #18:** `Generate project screenshots, complete documentation and prepare production deployment`
