@@ -1,0 +1,36 @@
+{
+  "name": "11-crm-leads",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,magenta\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "lint": "oxlint",
+    "format": "prettier --write .",
+    "test": "npm --prefix server test && npm --prefix client test",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "oxlint",
+      "prettier --write"
+    ],
+    "*.{css,json,md,sql}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "oxlint": "^1.71.0",
+    "prettier": "^3.9.6"
+  }
+}
