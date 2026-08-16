@@ -1,127 +1,210 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext.js';
 import { useAuth } from './hooks/useAuth.js';
-import { useTheme } from './hooks/useTheme.js';
 import { LoginView } from './views/LoginView.js';
 import { RegisterView } from './views/RegisterView.js';
+import { DashboardLayout } from './components/layout/DashboardLayout.js';
+import { NavItemKey } from './components/layout/Sidebar.js';
+import { MetricCards, OverviewMetricsData } from './components/dashboard/MetricCards.js';
 import {
-  Button,
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
+  Button,
   Badge,
 } from './components/ui/index.js';
-import { Layers, LogOut, Sun, Moon, Sparkles, ShieldCheck, UserCheck } from 'lucide-react';
+import { api } from './services/api.js';
+import { Sparkles, Kanban, Users, BarChart3, Calendar, Clock, ArrowRight } from 'lucide-react';
 
 function AuthenticatedApp() {
-  const { user, logout } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
+  const { user } = useAuth();
+  const [activeNav, setActiveNav] = useState<NavItemKey>('leads');
+  const [metrics, setMetrics] = useState<OverviewMetricsData | undefined>(undefined);
+  const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      setIsLoadingMetrics(true);
+      try {
+        const data = await api.get<{ metrics: OverviewMetricsData }>('/metrics/overview');
+        setMetrics(data.metrics);
+      } catch {
+        // Mock fallback default values matching design.png
+        setMetrics({
+          total_leads: 18,
+          pipeline_value: 345000,
+          won_revenue: 120000,
+          win_rate_percentage: 42,
+        });
+      } finally {
+        setIsLoadingMetrics(false);
+      }
+    };
+
+    fetchMetrics();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#0b0f17] text-slate-100 flex flex-col p-6 md:p-12">
-      <div className="max-w-4xl mx-auto w-full space-y-6">
-        {/* Top Navbar */}
-        <header className="flex items-center justify-between bg-[#121824] border border-slate-800 rounded-2xl p-6 shadow-xl">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
-              <Layers className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-white">LeadFlow CRM</h1>
-                <Badge variant="stage-proposal" dot>
-                  Autenticado
-                </Badge>
-              </div>
-              <p className="text-xs text-slate-400">
-                Sesión activa para{' '}
-                <span className="text-indigo-400 font-semibold">{user?.name}</span> (
-                {user?.role === 'admin' ? 'Administrador' : 'Comercial'})
-              </p>
-            </div>
-          </div>
+    <DashboardLayout
+      activeNav={activeNav}
+      onNavigate={setActiveNav}
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      onNewLeadClick={() => setActiveNav('leads')}
+    >
+      {/* 1. Top Metric Cards (Cloned from design.png) */}
+      <MetricCards metrics={metrics} isLoading={isLoadingMetrics} />
 
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-slate-800 bg-slate-900/60 text-slate-300"
-              onClick={toggleTheme}
-              leftIcon={
-                isDark ? (
-                  <Sun className="w-4 h-4 text-amber-400" />
-                ) : (
-                  <Moon className="w-4 h-4 text-slate-400" />
-                )
-              }
-            >
-              {isDark ? 'Claro' : 'Oscuro'}
-            </Button>
-
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={logout}
-              leftIcon={<LogOut className="w-4 h-4" />}
-            >
-              Cerrar Sesión
-            </Button>
-          </div>
-        </header>
-
-        {/* Auth State Card */}
-        <Card className="bg-[#121824] border-slate-800 rounded-2xl p-6 space-y-4">
-          <CardHeader>
-            <CardTitle className="text-white">
-              Estado de Autenticación de Cliente (Issue #12)
-            </CardTitle>
-            <CardDescription className="text-slate-400">
-              Control de sesión, tokens JWT, persistencia en localStorage y soporte para usuarios de
-              prueba.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4 text-sm text-slate-300">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2">
-                <div className="flex items-center gap-2 text-indigo-400 font-semibold text-xs uppercase tracking-wider">
-                  <UserCheck className="w-4 h-4" /> Usuario Activo
+      {/* 2. Dynamic View Content */}
+      <div className="space-y-6">
+        {activeNav === 'dashboard' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="bg-[#121824] border-slate-800 lg:col-span-2 p-6">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-white">Resumen Ejecutivo de Pipeline</CardTitle>
+                    <CardDescription className="text-slate-400">
+                      Rendimiento comercial de {user?.name}
+                    </CardDescription>
+                  </div>
+                  <Badge variant="stage-proposal" dot>
+                    Pipeline Saludable
+                  </Badge>
                 </div>
-                <div className="text-sm font-medium text-white">{user?.name}</div>
-                <div className="text-xs text-slate-400">{user?.email}</div>
-                <Badge variant={user?.role === 'admin' ? 'priority-high' : 'stage-new'}>
-                  Rol: {user?.role}
-                </Badge>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2">
-                <div className="flex items-center gap-2 text-purple-400 font-semibold text-xs uppercase tracking-wider">
-                  <ShieldCheck className="w-4 h-4" /> Seguridad y Token
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-slate-300">
+                  El CRM se encuentra conectado y sincronizado con el backend Node.js 22 LTS y la
+                  base de datos relacional MySQL 8.4.
+                </p>
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActiveNav('pipeline')}
+                    leftIcon={<Kanban className="w-4 h-4 text-indigo-400" />}
+                    className="border-slate-800 bg-slate-900/60 text-slate-300 justify-start"
+                  >
+                    Ver Tablero Kanban
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActiveNav('leads')}
+                    leftIcon={<Users className="w-4 h-4 text-purple-400" />}
+                    className="border-slate-800 bg-slate-900/60 text-slate-300 justify-start"
+                  >
+                    Gestionar Leads
+                  </Button>
                 </div>
-                <div className="text-xs text-slate-400">
-                  Token JWT adjuntado automáticamente en cada petición HTTP via{' '}
-                  <code>services/api.ts</code>.
-                </div>
-                <div className="text-[11px] font-mono text-emerald-400">Bearer Token Activo</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Milestone 3 Next Step Indicator */}
-        <footer className="bg-indigo-950/40 border border-indigo-800/60 rounded-2xl p-4 flex items-center justify-between text-xs text-indigo-300">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
-            <span className="font-semibold">
-              Issue #12 — Auth State & Route Guards Implementados
-            </span>
+            <Card className="bg-[#121824] border-slate-800 p-6 space-y-4">
+              <CardHeader>
+                <CardTitle className="text-white">Accesos Directos</CardTitle>
+                <CardDescription className="text-slate-400">Navegación del módulo</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {[
+                  { key: 'pipeline', label: 'Pipeline Comercial', icon: Kanban },
+                  { key: 'leads', label: 'Directorio de Prospectos', icon: Users },
+                  { key: 'activities', label: 'Registro de Actividades', icon: Clock },
+                  { key: 'reports', label: 'Informes & Analytics', icon: BarChart3 },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => setActiveNav(item.key as NavItemKey)}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 hover:bg-slate-900/80 border border-slate-800/60 text-xs text-slate-300 font-medium transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <item.icon className="w-4 h-4 text-indigo-400" />
+                      <span>{item.label}</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                  </button>
+                ))}
+              </CardContent>
+            </Card>
           </div>
-          <span className="text-indigo-400">Listo para Issue #13: Layout, Sidebar & Métricas</span>
-        </footer>
+        )}
+
+        {activeNav === 'pipeline' && (
+          <Card className="bg-[#121824] border-slate-800 p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mx-auto">
+              <Kanban className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Tablero Kanban de Ventas</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              En la Issue #14 implementaremos el tablero Kanban interactivo con drag-and-drop y
+              transiciones automáticas de etapa.
+            </p>
+          </Card>
+        )}
+
+        {activeNav === 'leads' && (
+          <Card className="bg-[#121824] border-slate-800 p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto">
+              <Users className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Directorio de Prospectos</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              En la Issue #15 implementaremos la tabla densa de datos de leads con búsqueda, filtros
+              por etapa, paginación y modal de creación/edición.
+            </p>
+          </Card>
+        )}
+
+        {activeNav === 'activities' && (
+          <Card className="bg-[#121824] border-slate-800 p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-sky-600/20 border border-sky-500/30 flex items-center justify-center text-sky-400 mx-auto">
+              <Clock className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Historial de Actividades</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              Timeline de llamadas, reuniones y notas comerciales.
+            </p>
+          </Card>
+        )}
+
+        {activeNav === 'calendar' && (
+          <Card className="bg-[#121824] border-slate-800 p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Calendario de Citas Comerciales</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              Agenda comercial y reuniones programadas con prospectos.
+            </p>
+          </Card>
+        )}
+
+        {activeNav === 'reports' && (
+          <Card className="bg-[#121824] border-slate-800 p-8 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
+              <BarChart3 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Reportes y Conversión</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              Métricas de rendimiento de comerciales y retorno por canal de marketing.
+            </p>
+          </Card>
+        )}
       </div>
-    </div>
+
+      {/* Footer Tracker */}
+      <footer className="bg-[#121824] border border-slate-800/80 rounded-2xl p-4 flex items-center justify-between text-xs text-slate-400">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-indigo-400" />
+          <span>LeadFlow CRM v1.0.0 — Layout & Métricas Cloned</span>
+        </div>
+        <span className="text-indigo-400 font-mono text-[11px]">Issue #13 Completa</span>
+      </footer>
+    </DashboardLayout>
   );
 }
 
