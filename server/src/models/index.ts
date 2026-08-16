@@ -37,3 +37,8 @@ export async function syncDatabase(force = false) {
 }
 
 export { sequelize, User, Stage, LeadSource, Lead, Activity };
+export type { UserAttributes } from './User.js';
+export type { StageAttributes } from './Stage.js';
+export type { LeadSourceAttributes } from './LeadSource.js';
+export type { LeadAttributes } from './Lead.js';
+export type { ActivityAttributes } from './Activity.js';
