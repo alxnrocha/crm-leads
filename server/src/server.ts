@@ -6,6 +6,7 @@ import { testDatabaseConnection } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
 import stageRoutes from './routes/stage.routes.js';
 import leadRoutes from './routes/lead.routes.js';
+import activityRoutes from './routes/activity.routes.js';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.get('/health', (_req: Request, res: Response) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/stages', stageRoutes);
 app.use('/api/v1/leads', leadRoutes);
+app.use('/api/v1/activities', activityRoutes);
 
 // API Root info
 app.get('/api/v1', (_req: Request, res: Response) => {
