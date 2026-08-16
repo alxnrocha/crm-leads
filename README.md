@@ -1,6 +1,7 @@
 # LeadFlow CRM — Gestión de Leads B2B y Pipeline Comercial
 
-[![CI Pipeline](https://github.com/alxnrocha/crm-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/alxnrocha/crm-leads/actions)
+[![CI & Deploy](https://github.com/alxnrocha/crm-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/alxnrocha/crm-leads/actions)
+[![Demo GitHub Pages](https://img.shields.io/badge/Demo-GitHub_Pages-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://alxnrocha.github.io/crm-leads/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.2-61dafb.svg)](https://react.dev/)
 [![Express](https://img.shields.io/badge/Express-5.0-black.svg)](https://expressjs.com/)
@@ -9,6 +10,10 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
 **LeadFlow CRM** es una solución web empresarial Full Stack diseñada para equipos comerciales y directores de ventas B2B. Proporciona un control exhaustivo del embudo de ventas mediante un tablero Kanban interactivo, una tabla densa de prospectos con filtros avanzados, un panel lateral de detalles con timeline de actividades comerciales y analíticas en tiempo real.
+
+- 🌐 **Demo en Vivo (GitHub Pages):** [https://alxnrocha.github.io/crm-leads/](https://alxnrocha.github.io/crm-leads/)
+- 📖 **Documentación de API (Swagger UI):** [http://localhost:5000/api/docs](http://localhost:5000/api/docs)
+- 📦 **Repositorio GitHub:** [https://github.com/alxnrocha/crm-leads](https://github.com/alxnrocha/crm-leads)
 
 ---
 
