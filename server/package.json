@@ -8,7 +8,7 @@
     "build": "tsc && node -e \"import('fs').then(fs => { fs.mkdirSync('dist/docs', {recursive: true}); fs.copyFileSync('src/docs/swagger.yaml', 'dist/docs/swagger.yaml'); })\"",
     "start": "node dist/server.js",
     "seed": "tsx src/scripts/seed.ts",
-    "test": "vitest run"
+    "test": "vitest run src"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

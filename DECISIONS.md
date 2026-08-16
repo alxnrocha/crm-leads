@@ -1,43 +1,31 @@
-# Registro de Decisiones de Arquitectura (DECISIONS.md)
+# Registro de Decisiones de Arquitectura (ADR) — LeadFlow CRM
 
-Este documento registra formalmente las decisiones técnicas adoptadas para el Proyecto 11 (LeadFlow CRM).
+## ADR 001: Monorepo Workspaces (`client` + `server` + `database`)
 
----
+- **Contexto:** Se requiere un CRM Full Stack con frontend en React 19 y backend en Express 5 manteniendo sincronía de tipos TypeScript y scripts de ejecución paralelos.
+- **Decisión:** Configurar NPM Workspaces con TypeScript (`tsconfig.base.json`) para orquestar `client` y `server` sin sobrecarga de herramientas complejas.
+- **Estado:** Aceptado e Implementado.
 
-## 1. Arquitectura Monorepo desacoplada (`client/` y `server/`)
+## ADR 002: Base de Datos Relacional MySQL 8.4 LTS con Sequelize ORM
 
-- **Contexto:** El proyecto requiere tanto un backend Node/Express robusto con base de datos como una SPA moderna en React 19.
-- **Decisión:** Organizar el proyecto en una estructura monorepo basada en npm workspaces (`client/` y `server/`) con tooling centralizado en la raíz (Oxlint, Prettier, Husky).
-- **Consecuencias:** Permite desarrollo ágil y simultáneo sin mezclar dependencias de frontend y backend, manteniendo scripts unificados (`npm run dev`, `npm run build`, `npm run test`).
+- **Contexto:** El CRM maneja relaciones estrictas entre usuarios comerciales, prospectos, etapas de embudo, orígenes de marketing e historial cronológico de actividades.
+- **Decisión:** Emplear MySQL 8.4 LTS relacional con DDL indexado (`database/schema.sql`) y Sequelize ORM con modelos tipados en TypeScript.
+- **Estado:** Aceptado e Implementado.
 
----
+## ADR 003: Tokens CSS y Tailwind CSS v4 (`@theme`)
 
-## 2. Backend con Express 5 y TypeScript
+- **Contexto:** Clonar de forma pixel-perfect la interfaz dark slate provista en la imagen de diseño `design/design.png`.
+- **Decisión:** Usar directiva `@theme` en Tailwind CSS v4 para definir la paleta de colores (`#0b0f17`, `#121824`, `#151c2c`, `#6366f1`) y variables de estado por etapa del pipeline.
+- **Estado:** Aceptado e Implementado.
 
-- **Contexto:** Primera API REST real conectada del portfólio.
-- **Decisión:** Utilizar Express 5 sobre Node.js 22 LTS con TypeScript.
-- **Consecuencias:** Permite manejo nativo y automático de errores asíncronos en los middlewares de error sin necesidad de envolver cada controlador en bloques try/catch manuales.
+## ADR 004: OpenAPI 3.0.3 y Documentación Interactiva
 
----
+- **Contexto:** La API REST debe ser fácilmente consumible y testeable por desarrolladores e integradores.
+- **Decisión:** Escribir la especificación completa en `server/src/docs/swagger.yaml` y montarla en `/api/docs` mediante `swagger-ui-express`.
+- **Estado:** Aceptado e Implementado.
 
-## 3. Base de Datos Relacional MySQL 8.4 LTS y ORM Sequelize
+## ADR 005: Pruebas Automatizadas con Vitest y Supertest
 
-- **Contexto:** Se requiere persistencia real de prospectos comerciales y pipelines de venta.
-- **Decisión:** Utilizar MySQL 8.4 LTS (versión LTS estándar de la industria) con Sequelize para modelado relacional y transaccional.
-- **Consecuencias:** Permite demostrar dominio de SQL clásico, integridad referencial con claves foráneas, índices de búsqueda y migraciones controladas.
-
----
-
-## 4. Autenticación con Stateless JWT y Hash con bcrypt
-
-- **Contexto:** Control de acceso y aislamiento de cuentas para representantes de ventas.
-- **Decisión:** Implementar autenticación basada en JSON Web Tokens (JWT) firmados con clave secreta y contraseñas cifradas con `bcryptjs` (10 rondas de salt).
-- **Consecuencias:** Permite autenticación sin estado escalable, compatible con cabeceras `Authorization: Bearer <token>` consumidas por el cliente React.
-
----
-
-## 5. Validación con Zod y React Hook Form
-
-- **Contexto:** Formularios de captura de leads y endpoints de API requieren validación estricta de tipos y formatos.
-- **Decisión:** Utilizar Zod tanto en frontend (`@hookform/resolvers/zod`) como en backend (middlewares de validación de request body).
-- **Consecuencias:** Prevención de inconsistencias en runtime y tipado estático inferido (`z.infer<typeof schema>`).
+- **Contexto:** Asegurar la estabilidad de los endpoints críticos (autenticación, etapas, prospectos) y componentes clave de UI.
+- **Decisión:** Emplear Vitest y Supertest en el backend, y Vitest con Testing Library en el frontend, integrados en un pipeline de GitHub Actions CI.
+- **Estado:** Aceptado e Implementado.
