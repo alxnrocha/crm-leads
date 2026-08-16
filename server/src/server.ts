@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/env.js';
 import { testDatabaseConnection } from './config/database.js';
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 
@@ -25,6 +26,9 @@ app.get('/health', (_req: Request, res: Response) => {
     environment: config.nodeEnv,
   });
 });
+
+// API Routes
+app.use('/api/v1/auth', authRoutes);
 
 // API Root info
 app.get('/api/v1', (_req: Request, res: Response) => {
