@@ -162,7 +162,7 @@ _(La aplicación incluye botones de acceso directo de 1 clic en la pantalla de i
 
 ---
 
-## 🧪 Pruebas Automatizadas y Calidad de Código
+## 🧪 Calidad de Código y Pruebas
 
 ```bash
 # Ejecutar todas las pruebas unitarias y de integración (12 pruebas)
@@ -183,3 +183,6 @@ npm run build
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulte el archivo [LICENSE](./LICENSE) para más detalles.
+
+**Autor:** [Alexandre Rocha](https://github.com/alxnrocha)
+
