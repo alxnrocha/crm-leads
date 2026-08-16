@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { config } from './config/env.js';
 import { testDatabaseConnection } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
+import stageRoutes from './routes/stage.routes.js';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // API Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/stages', stageRoutes);
 
 // API Root info
 app.get('/api/v1', (_req: Request, res: Response) => {
