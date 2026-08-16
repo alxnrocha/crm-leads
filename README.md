@@ -17,22 +17,6 @@
 
 ---
 
-## 📸 Vistas Reales del Sistema
-
-### 1. Tablero Kanban Interactivo de Ventas
-
-![LeadFlow CRM Tablero Kanban](./docs/screenshots/kanban-preview.png)
-
-### 2. Directorio de Leads & Filtros Avanzados
-
-![LeadFlow CRM Directorio de Leads](./docs/screenshots/leads-table-preview.png)
-
-### 3. Panel Lateral de Detalle del Lead & Actividades
-
-![LeadFlow CRM Panel de Detalle](./docs/screenshots/lead-drawer-preview.png)
-
----
-
 ## ✨ Características Principales
 
 ### 🚀 Frontend (React 19 + TypeScript + Tailwind CSS v4)
