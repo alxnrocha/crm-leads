@@ -64,7 +64,8 @@ npm run dev
 
 ## 🏛️ Arquitectura del Proyecto
 
-Para más detalles sobre la arquitectura y el roadmap, consulte:
+Para más detalles sobre la arquitectura, base de datos y roadmap, consulte:
 
+- [database/README.md](./database/README.md) — Modelo relacional completo, diagrama DER (Mermaid) y diccionario de datos.
 - [BLUEPRINT.md](./BLUEPRINT.md) — Hoja de ruta de 18 issues y especificación funcional.
 - [DECISIONS.md](./DECISIONS.md) — Registro de decisiones técnicas de ingeniería.

@@ -22,7 +22,7 @@
       "oxlint",
       "prettier --write"
     ],
-    "*.{css,json,md,sql}": [
+    "*.{css,json,md}": [
       "prettier --write"
     ]
   },
