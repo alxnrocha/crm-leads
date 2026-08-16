@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { config } from './config/env.js';
+import { testDatabaseConnection } from './config/database.js';
 
 const app = express();
 
@@ -52,8 +53,9 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(config.port, () => {
+  app.listen(config.port, async () => {
     console.log(`🚀 CRM Leads Server running at http://localhost:${config.port}`);
+    await testDatabaseConnection();
   });
 }
 
