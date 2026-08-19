@@ -1,13 +1,26 @@
 import bcrypt from 'bcryptjs';
 import { sequelize, User, Stage, LeadSource, Lead, Activity } from '../models/index.js';
+import { runMigrations } from './migrate.js';
+
+async function clearAllTables() {
+  // Vacía todas las tablas respetando las claves foráneas (DDL y DML)
+  await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+  for (const table of ['activities', 'leads', 'lead_sources', 'stages', 'users']) {
+    await sequelize.query(`TRUNCATE TABLE \`${table}\``);
+  }
+  await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+}
 
 async function seed() {
   console.log('🌱 Iniciando población de datos de demostración (Seed)...');
 
   try {
-    // Sincronizar y recrear tablas limpiamente
-    await sequelize.sync({ force: true });
-    console.log('✅ Tablas recreadas correctamente.');
+    // Asegurar que el esquema esté al día mediante migraciones versionadas
+    await runMigrations();
+    console.log('✅ Esquema de base de datos actualizado vía migraciones.');
+
+    await clearAllTables();
+    console.log('✅ Tablas vaciadas correctamente.');
 
     // 1. Crear Usuarios
     const hashedPassword = await bcrypt.hash('Password123!', 10);

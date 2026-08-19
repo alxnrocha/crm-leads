@@ -8,12 +8,9 @@ import {
   QueryLeadsInput,
 } from '../schemas/lead.schema.js';
 
-export const getLeads = async (
-  req: Request<object, object, object, QueryLeadsInput>,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const getLeads = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    const q = req.query as unknown as QueryLeadsInput;
     const {
       page = 1,
       limit = 20,
@@ -26,7 +23,7 @@ export const getLeads = async (
       max_value,
       sort_by = 'created_at',
       sort_order = 'DESC',
-    } = req.query;
+    } = q;
 
     const where: WhereOptions<LeadAttributes> = {};
 

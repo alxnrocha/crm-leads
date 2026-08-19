@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc && node -e \"import('fs').then(fs => { fs.mkdirSync('dist/docs', {recursive: true}); fs.copyFileSync('src/docs/swagger.yaml', 'dist/docs/swagger.yaml'); })\"",
+    "build": "tsc && node -e \"import('fs').then(fs => { fs.mkdirSync('dist/docs', {recursive: true}); fs.mkdirSync('dist/migrations', {recursive: true}); fs.copyFileSync('src/docs/swagger.yaml', 'dist/docs/swagger.yaml'); const mg=fs.readdirSync('migrations'); mg.forEach(f => fs.copyFileSync(`migrations/${f}`, `dist/migrations/${f}`)); })\"",
     "start": "node dist/server.js",
+    "db:migrate": "tsx src/scripts/migrate.ts up",
+    "db:rollback": "tsx src/scripts/migrate.ts down",
     "seed": "tsx src/scripts/seed.ts",
     "test": "vitest run src"
   },

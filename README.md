@@ -1,19 +1,18 @@
 # LeadFlow CRM — Gestión de Leads B2B y Pipeline Comercial
 
-[![CI & Deploy](https://github.com/alxnrocha/crm-leads/actions/workflows/ci.yml/badge.svg)](https://github.com/alxnrocha/crm-leads/actions)
-[![Demo GitHub Pages](https://img.shields.io/badge/Demo-GitHub_Pages-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://alxnrocha.github.io/crm-leads/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19.2-61dafb.svg)](https://react.dev/)
-[![Express](https://img.shields.io/badge/Express-5.0-black.svg)](https://expressjs.com/)
-[![MySQL](https://img.shields.io/badge/MySQL-8.4_LTS-00758f.svg)](https://www.mysql.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-38bdf8.svg)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-success?style=flat-square&logo=github&logoColor=white)](https://alxnrocha.github.io/crm-leads/)
+[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express 5](https://img.shields.io/badge/Express-5.0-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![MySQL 8.4 LTS](https://img.shields.io/badge/MySQL-8.4_LTS-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![SQL DDL](https://img.shields.io/badge/SQL-DDL_&_Relational_Schema-00758F?style=flat-square&logo=sqlite&logoColor=white)](https://www.mysql.com/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-**LeadFlow CRM** es una solución web empresarial Full Stack diseñada para equipos comerciales y directores de ventas B2B. Proporciona un control exhaustivo del embudo de ventas mediante un tablero Kanban interactivo, una tabla densa de prospectos con filtros avanzados, un panel lateral de detalles con timeline de actividades comerciales y analíticas en tiempo real.
-
-- 🌐 **Demo en Vivo (GitHub Pages):** [https://alxnrocha.github.io/crm-leads/](https://alxnrocha.github.io/crm-leads/)
-- 📖 **Documentación de API (Swagger UI):** [http://localhost:5000/api/docs](http://localhost:5000/api/docs)
-- 📦 **Repositorio GitHub:** [https://github.com/alxnrocha/crm-leads](https://github.com/alxnrocha/crm-leads)
+> **Proyecto 11 del Portafolio Profesional** — Plataforma web empresarial Full Stack de gestión de leads B2B, pipeline comercial interactivo y analíticas de ventas.  
+> 🔗 **Demo en Vivo en GitHub Pages:** [https://alxnrocha.github.io/crm-leads/](https://alxnrocha.github.io/crm-leads/)
 
 ---
 
@@ -35,10 +34,13 @@
 ### 🛡️ Backend & Datos (Node.js 22 + Express 5 + Sequelize + MySQL 8.4 LTS)
 
 - **Autenticación JWT & BCrypt:** Endpoints seguros de registro, inicio de sesión y validación de perfil (`/api/v1/auth/me`) con control de roles (`admin`, `sales`).
-- **Arquitectura RESTful Modular:** Controladores, middlewares de validación Zod (`validateBody`) y rutas independientes para `/auth`, `/stages`, `/leads`, `/activities` y `/metrics`.
+- **Arquitectura RESTful Modular:** Controladores, middlewares de validación Zod (`validateBody`, `validateQuery`) y rutas independientes para `/auth`, `/stages`, `/leads`, `/activities` y `/metrics`.
+- **Migrations Versionadas:** Esquema gestionado con migraciones SQL numeradas (`server/migrations/*.sql`) y un runner que registra cada migración en la tabla `schema_migrations` (`npm run db:migrate` / `npm run db:rollback`).
+- **Filtros, Ordenación y Paginación Server-Side:** Listados de leads y actividades validados en el `query` con esquemas de Zod, ordenación por columnas autorizadas y paginación con metadatos (`page`, `limit`, `total`, `totalPages`).
 - **Reordenamiento Transaccional:** Endpoint transaccional (`POST /stages/reorder`) respaldado por `sequelize.transaction` para sincronizar el orden del Kanban.
 - **Documentación OpenAPI 3.0.3 & Swagger UI:** Interfaz interactiva de documentación y pruebas disponible en `/api/docs` y `/api/docs.json`.
-- **Modelo Relacional Robusto:** DDL relacional con claves foráneas (`ON DELETE CASCADE / SET NULL`), índices de optimización y script de seed (`npm run seed`).
+- **Modelo Relacional Robusto:** DDL relacional con claves foráneas (`ON DELETE CASCADE / SET NULL`), índices de optimización y script de seed (`npm run seed`) que aplica las migrations y puebla datos de demostración.
+- **Tests de Integración con MySQL:** Suite de CRUD end-to-end (registro → JWT → stages → leads → actividades → métricas) que se omite automáticamente si la base de datos no está disponible.
 
 ---
 
@@ -70,16 +72,17 @@
 │   └── seed.sql                   # Datos de demostración en SQL
 ├── server/                        # Backend (Node.js 22 + Express 5 + Sequelize)
 │   ├── src/
-│   │   ├── __tests__/             # Pruebas de integración con Supertest
+│   │   ├── __tests__/             # Pruebas de integración con Supertest (+ MySQL)
 │   │   ├── config/                # env.ts (validación Zod) y database.ts (Sequelize)
 │   │   ├── controllers/           # auth, stage, lead, activity, metrics controllers
 │   │   ├── docs/swagger.yaml      # Especificación OpenAPI 3.0.3
-│   │   ├── middlewares/           # auth.middleware.ts y validate.middleware.ts
+│   │   ├── middlewares/           # auth.middleware.ts, validate.middleware.ts (body & query)
 │   │   ├── models/                # User, Stage, LeadSource, Lead, Activity
 │   │   ├── routes/                # auth, stage, lead, activity, metrics routes
 │   │   ├── schemas/               # Zod validation schemas
-│   │   ├── scripts/seed.ts        # Script de población de datos ORM
+│   │   ├── scripts/               # migrate.ts (runner) y seed.ts (población ORM)
 │   │   └── server.ts              # Servidor Express y montaje de Swagger
+│   ├── migrations/                # Migraciones SQL versionadas (up/down)
 │   └── tsconfig.json
 └── package.json                   # Monorepo Workspaces y scripts globales
 ```
@@ -113,11 +116,17 @@ JWT_EXPIRES_IN=7d
 CORS_ORIGIN=http://localhost:5173
 ```
 
-### 3. Poblar Datos de Demostración
+### 3. Aplicar Migraciones y Poblar Datos de Demostración
 
 ```bash
+# Crea la base de datos y aplica las migraciones versionadas (registradas en schema_migrations)
+npm run db:migrate
+
+# Rellena tablas con datos de demostración (aplica migraciones si hace falta)
 npm run seed
 ```
+
+> **Nota:** `npm run seed` aplica las migraciones pendientes y vacía las tablas antes de insertar los datos de demostración. Para revertir la última migración use `npm run db:rollback`.
 
 ### 4. Iniciar en Modo Desarrollo
 
@@ -146,7 +155,7 @@ _(La aplicación incluye botones de acceso directo de 1 clic en la pantalla de i
 ## 🧪 Calidad de Código y Pruebas
 
 ```bash
-# Ejecutar todas las pruebas unitarias y de integración (12 pruebas)
+# Ejecuta pruebas unitarias de validación/protección y, si hay MySQL disponible, las de integración
 npm test
 
 # Ejecutar el linter Oxlint

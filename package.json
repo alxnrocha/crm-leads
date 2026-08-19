@@ -15,6 +15,8 @@
     "lint": "oxlint",
     "format": "prettier --write .",
     "seed": "npm --prefix server run seed",
+    "db:migrate": "npm --prefix server run db:migrate",
+    "db:rollback": "npm --prefix server run db:rollback",
     "test": "npm --prefix server test && npm --prefix client test",
     "prepare": "husky"
   },

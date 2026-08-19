@@ -26,16 +26,6 @@ Activity.belongsTo(Lead, { foreignKey: 'lead_id', as: 'lead' });
 User.hasMany(Activity, { foreignKey: 'user_id', as: 'activities' });
 Activity.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-export async function syncDatabase(force = false) {
-  try {
-    await sequelize.sync({ force, alter: !force });
-    console.log('✅ Base de datos sincronizada con los modelos ORM.');
-  } catch (error) {
-    console.error('❌ Error al sincronizar la base de datos:', (error as Error).message);
-    throw error;
-  }
-}
-
 export { sequelize, User, Stage, LeadSource, Lead, Activity };
 export type { UserAttributes } from './User.js';
 export type { StageAttributes } from './Stage.js';

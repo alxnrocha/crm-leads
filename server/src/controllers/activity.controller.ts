@@ -8,12 +8,13 @@ import {
 } from '../schemas/activity.schema.js';
 
 export const getActivities = async (
-  req: Request<object, object, object, QueryActivitiesInput>,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { page = 1, limit = 20, lead_id, user_id, type, status = 'all' } = req.query;
+    const q = req.query as unknown as QueryActivitiesInput;
+    const { page = 1, limit = 20, lead_id, user_id, type, status = 'all' } = q;
 
     const where: WhereOptions<ActivityAttributes> = {};
 
