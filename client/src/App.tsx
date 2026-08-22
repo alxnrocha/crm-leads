@@ -1,3 +1,4 @@
+import { ProjectBadge } from './components/ProjectBadge';
 import { useState, useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext.js';
 import { useAuth } from './hooks/useAuth.js';
@@ -258,6 +259,7 @@ function MainApp() {
           <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           <span className="text-sm font-medium text-slate-400">Cargando LeadFlow CRM...</span>
         </div>
+        <ProjectBadge />
       </div>
     );
   }
