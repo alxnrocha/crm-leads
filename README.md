@@ -1,26 +1,43 @@
-# LeadFlow CRM — Gestión de Leads B2B y Pipeline Comercial
+# LeadFlow CRM — Gestión de Leads B2B y Pipeline Comercial (Full Stack)
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-success?style=flat-square&logo=github&logoColor=white)](https://alxnrocha.github.io/crm-leads/)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Express 5](https://img.shields.io/badge/Express-5.0-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
-[![MySQL 8.4 LTS](https://img.shields.io/badge/MySQL-8.4_LTS-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![SQL DDL](https://img.shields.io/badge/SQL-DDL_&_Relational_Schema-00758F?style=flat-square&logo=sqlite&logoColor=white)](https://www.mysql.com/)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+<div align="center">
 
-> **Proyecto 11 del Portafolio Profesional** — Plataforma web empresarial Full Stack de gestión de leads B2B, pipeline comercial interactivo y analíticas de ventas.  
-> 🔗 **Demo en Vivo en GitHub Pages:** [https://alxnrocha.github.io/crm-leads/](https://alxnrocha.github.io/crm-leads/)
+![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Express 5](https://img.shields.io/badge/Express-5.0-000000?style=for-the-badge&logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.4%20LTS-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Deploy](https://img.shields.io/badge/Deploy-GitHub%20Pages-22C55E?style=for-the-badge&logo=github&logoColor=white)
+
+**Plataforma web empresarial Full Stack de gestión de leads B2B, pipeline comercial interactivo tipo Kanban de 6 fases con Drag & Drop, panel lateral slide-over y analíticas de conversión con backend Express 5 y MySQL 8.4 LTS.**
+
+[🚀 Demo en Vivo](https://alxnrocha.github.io/crm-leads/) • [📂 Repositorio en GitHub](https://github.com/alxnrocha/crm-leads)
+
+</div>
 
 ---
 
-## 🌟 Visión General & Propuesta de Valor
+## 🏛️ Arquitectura del Sistema
 
-**LeadFlow CRM** es una solución Full Stack orientada a directores y equipos comerciales B2B.
+```mermaid
+graph TD
+    subgraph Frontend ["Frontend (React 19 + TypeScript + Tailwind v4)"]
+        UI[UI: Tablero Kanban & Directorio de Leads] --> Store[Zustand Stores: Leads, Auth, Filters]
+        Store --> APIClient[Cliente API Híbrido con JWT Bearer & Fallback Mock]
+    end
 
-Centraliza el seguimiento del embudo de ventas mediante un tablero Kanban interactivo de arrastrar y soltar, directorio denso de prospectos, panel lateral de actividades comerciales con timeline cronológico y analíticas de conversión respaldadas por una API REST en Node.js y MySQL 8.4.
+    subgraph Backend ["Backend (Node.js 22 + Express 5)"]
+        APIClient --> Router[Router REST + Validación Zod]
+        Router --> AuthMiddleware[Middleware de Autenticación JWT]
+        Router --> Controllers[Controladores de Leads, Actividades & Métricas]
+        Controllers --> ORM[Sequelize ORM & Query Runner]
+    end
+
+    subgraph Database ["Base de Datos (MySQL 8.4 LTS)"]
+        ORM --> DB[(Tablas: users, leads, activities, pipeline_stages)]
+    end
+```
 
 ---
 
@@ -28,21 +45,21 @@ Centraliza el seguimiento del embudo de ventas mediante un tablero Kanban intera
 
 ### 🚀 Frontend (React 19 + TypeScript + Tailwind CSS v4)
 
-- **Tablero Kanban de Ventas:** Visualización de las 6 fases del embudo con Drag and Drop y sumas monetarias en tiempo real (€).
-- **Directorio de Leads y Filtros:** Tabla densa con paginación, búsqueda instantánea y filtros combinados.
-- **Panel Lateral Slide-Over:** Stepper de avance de fase comercial, acciones rápidas (llamadas, email) y timeline cronológico.
+- **Tablero Kanban de Ventas:** Visualización de las 6 fases del embudo comercial con Drag & Drop y sumas monetarias en tiempo real (€).
+- **Directorio de Leads y Filtros:** Tabla densa con paginación, búsqueda instantánea y filtros combinados de origen y prioridad.
+- **Panel Lateral Slide-Over:** Stepper de avance de fase comercial, acciones rápidas (llamadas, email) y timeline cronológico de actividades.
 - **Métricas y KPIs en Tiempo Real:** Total del pipeline (€345k), tasa de conversión (42%) e ingresos cerrados.
 
 ### 🛡️ Backend & Datos (Node.js 22 + Express 5 + Sequelize + MySQL 8.4 LTS)
 
 - **Autenticación JWT & BCrypt:** Endpoints seguros con control de roles (`admin`, `sales`).
-- **Arquitectura RESTful Modular:** Controladores y middlewares con validación Zod.
+- **Arquitectura RESTful Modular:** Controladores y middlewares con validación tipada mediante Zod.
 - **Migraciones SQL Versionadas:** Runner que registra migraciones en `schema_migrations`.
-- **OpenAPI 3.0.3 & Swagger UI:** Documentación interactiva en `/api/docs`.
+- **OpenAPI 3.0.3 & Swagger UI:** Documentación interactiva de la API en `/api/docs`.
 
 ---
 
-## 🏛️ Arquitectura del Proyecto
+## 🗂️ Estructura del Proyecto
 
 ```text
 11-crm-leads/
@@ -55,8 +72,9 @@ Centraliza el seguimiento del embudo de ventas mediante un tablero Kanban intera
 │   ├── src/                       # Componentes, vistas, stores, hooks
 │   └── package.json
 ├── compose.yaml                   # Contenedor MySQL 8.4 LTS
-├── LICENSE
-└── package.json                   # Scripts monorepo
+├── package.json                   # Scripts monorepo
+├── tsconfig.json
+└── vite.config.ts
 ```
 
 ---
@@ -69,58 +87,49 @@ Centraliza el seguimiento del embudo de ventas mediante un tablero Kanban intera
 - npm `>= 10.0.0`
 - Docker Compose o MySQL 8.4 local
 
-### Pasos
+### Pasos de Ejecución
 
-1. **Clonar el repositorio:**
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/alxnrocha/crm-leads.git
+cd crm-leads
 
-   ```bash
-   git clone https://github.com/alxnrocha/crm-leads.git
-   cd crm-leads
-   ```
+# 2. Instalar dependencias monorepo
+npm install
 
-2. **Instalar dependencias:**
+# 3. Iniciar contenedor MySQL (opcional)
+docker compose up -d
 
-   ```bash
-   npm install
-   ```
+# 4. Iniciar entorno de desarrollo
+npm run dev
+```
 
-3. **Iniciar contenedor de base de datos MySQL (opcional):**
-
-   ```bash
-   docker compose up -d
-   ```
-
-4. **Aplicar migraciones y seed:**
-
-   ```bash
-   npm run db:migrate
-   npm run seed
-   ```
-
-5. **Ejecutar en modo desarrollo:**
-   ```bash
-   npm run dev
-   ```
-   Abre el frontend en `http://localhost:5173` y la API en `http://localhost:5000`.
+_Frontend disponible en `http://localhost:5173` y API en `http://localhost:5000`._
 
 ---
 
 ## 🔑 Credenciales de Demostración
 
 | Rol               | Correo Electrónico            | Contraseña   |
-| :---------------- | :---------------------------- | :----------- |
+| ----------------- | ----------------------------- | ------------ |
 | **Administrador** | `admin@leadflow.com`          | `Admin1234!` |
 | **Comercial**     | `carlos.mendoza@leadflow.com` | `Sales1234!` |
 
 ---
 
-## 🛡️ Calidad de Código & Testing
+## 🛠️ Tecnologías Utilizadas
 
-- **Linter & Typecheck:** Oxlint y TypeScript en modo estricto en frontend y backend.
-- **Tests Automatizados:** Pruebas unitarias e integración con Supertest y MySQL.
+| Capa              | Tecnología               | Aspectos Clave                                   |
+| ----------------- | ------------------------ | ------------------------------------------------ |
+| **Frontend**      | React 19, TypeScript 5.8 | Tablero Kanban dnd, panel slide-over interactivo |
+| **Backend**       | Node.js 22, Express 5    | API REST, validación Zod y autenticación JWT     |
+| **Base de Datos** | MySQL 8.4 LTS, Sequelize | Esquema relacional con claves foráneas e índices |
+| **Estado Global** | Zustand 5.0              | Gestión reactiva de leads y filtros              |
+| **Contenedores**  | Docker Compose           | Entorno de desarrollo aislado para MySQL         |
+| **Despliegue**    | GitHub Pages             | Despliegue estático continuo y optimizado        |
 
 ---
 
-## 📄 Licencia
-
-Este proyecto se encuentra bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+<div align="center">
+  <sub>Desarrollado con dedicación por <a href="https://github.com/alxnrocha">Alex Rocha</a> • Proyecto 11 del Portafolio Profesional Frontend.</sub>
+</div>
